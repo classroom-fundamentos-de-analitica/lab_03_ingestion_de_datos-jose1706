@@ -2,7 +2,7 @@
 Ingestión de datos - Reporte de clusteres
 -----------------------------------------------------------------------------------------
 
-Construya un dataframe de Pandas a partir del archivo 'clusters_report.txt', teniendo en
+Construya un textoframe de Pandas a partir del archivo 'clusters_report.txt', teniendo en
 cuenta que los nombres de las columnas deben ser en minusculas, reemplazando los espacios
 por guiones bajos; y que las palabras clave deben estar separadas por coma y con un solo 
 espacio entre palabra y palabra.
@@ -11,7 +11,7 @@ espacio entre palabra y palabra.
 import pandas as pd
 import re
 
-def ingest_data():
+def ingest_texto():
 
     #
     # Inserte su código aquí
@@ -40,17 +40,26 @@ def ingest_data():
             encabezados[2] : [],
             encabezados[3] : [],
         }
-        
+        #de aqui ´para arriba todo esta bien 
+
         #ingreso de datos al diccionario
-        for i in range(4, len(lineas)):
-            ing = lineas[i].split() 
-            if ing[0].isnumeric: #caso en el que se ingresa algun valor a las cuatro columnas
-                texto[encabezados[0]].append(ing[0])
-                texto[encabezados[1]].append(ing[1])
-                texto[encabezados[2]].append(ing[2] + "%")
-        print(encabezados)
-        print(lineas[4][2], "si")
-    return 
+        for i in range(2, len(lineas)):
+
+            lineas[i] = re.sub(r"\s{2,}", ".", lineas[i]).strip().split(".")
+            lineas[i] = list(filter(lambda x: x, lineas[i]))
+
+            if lineas[i] and lineas[i][0].isnumeric():
+                texto["cluster"].append(int(lineas[i][0]))
+                texto["cantidad_de_palabras_clave"].append(int(lineas[i][1]))
+                texto["porcentaje_de_palabras_clave"].append(float(lineas[i][2][:-2].replace(",", ".")))
+                texto["principales_palabras_clave"].append(" ".join(lineas[i][3:]))
+                
+            elif texto["principales_palabras_clave"]:
+                line = texto["principales_palabras_clave"].pop() + " " + " ".join(lineas[i])                
+                texto["principales_palabras_clave"].append(line.strip())
+
+    df = pd.DataFrame(texto)
+    return df 
 
 
-print(ingest_data())
+print(ingest_texto())
