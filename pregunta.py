@@ -2,7 +2,7 @@
 Ingestión de datos - Reporte de clusteres
 -----------------------------------------------------------------------------------------
 
-Construya un textoframe de Pandas a partir del archivo 'clusters_report.txt', teniendo en
+Construya un Dataframe de Pandas a partir del archivo 'clusters_report.txt', teniendo en
 cuenta que los nombres de las columnas deben ser en minusculas, reemplazando los espacios
 por guiones bajos; y que las palabras clave deben estar separadas por coma y con un solo 
 espacio entre palabra y palabra.
@@ -11,7 +11,7 @@ espacio entre palabra y palabra.
 import pandas as pd
 import re
 
-def ingest_texto():
+def ingest_data():
 
     #
     # Inserte su código aquí
@@ -53,13 +53,10 @@ def ingest_texto():
                 texto["cantidad_de_palabras_clave"].append(int(lineas[i][1]))
                 texto["porcentaje_de_palabras_clave"].append(float(lineas[i][2][:-2].replace(",", ".")))
                 texto["principales_palabras_clave"].append(" ".join(lineas[i][3:]))
-                
+
             elif texto["principales_palabras_clave"]:
                 line = texto["principales_palabras_clave"].pop() + " " + " ".join(lineas[i])                
                 texto["principales_palabras_clave"].append(line.strip())
 
     df = pd.DataFrame(texto)
     return df 
-
-
-print(ingest_texto())
